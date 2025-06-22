@@ -1,0 +1,37 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon server.js ",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": 
+  },
+  "author": "pratik.",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@chakra-ui/react": "^3.19.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "framer-motion": "^12.12.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.0",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.8.1",
+    "texts": "file:.."
+  },
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.5.0",
+    "nodemon": "^3.1.10"
+  }
+}
