@@ -40,9 +40,13 @@ app.get("/", (req, res) => {
   res.send("API running");
 });
 
-app.get(["/login"], (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+app.get("/hola", (req, res) => {
+  res.send("API running");
 });
+
+// app.get(["/login"], (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+// });
 
 app.use("/api/user", userRoutes);
 app.use("/api/message", messageRoutes);
