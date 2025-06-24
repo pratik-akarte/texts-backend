@@ -61,7 +61,12 @@ app.use(errorHandler);
 // .find() then returns the first object where that function returns true
 
 // Start server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`.yellow.bold);
-});
+
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`.yellow.bold);
+  });
+}
+
+export default server;
