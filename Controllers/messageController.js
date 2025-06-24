@@ -1,16 +1,13 @@
-const asyncHandler = require("express-async-handler");
+import asyncHandler from "express-async-handler";
 
-const User = require("../Models/UserModel.js");
-const Message = require("../Models/MessageModel.js");
-const { default: cloudinary } = require("../config/cloudinary.js");
-const { getReceiverSocketId, io } = require("./../config/socket.js");
+import User from "../Models/UserModel.js";
+import Message from "../Models/MessageModel.js";
+import cloudinary from "../config/cloudinary.js";
+import { getReceiverSocketId, io } from "../config/socket.js";
 
 const getUsersForSidebar = asyncHandler(async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-
-    // this line finds all users in database whose _id is not equalto ($ne) to logged in user id  as we want to see only our contacts messages
-    // also -password means not including password field in response
 
     const filteredUsers = await User.find({
       _id: { $ne: loggedInUserId },
@@ -18,17 +15,14 @@ const getUsersForSidebar = asyncHandler(async (req, res) => {
 
     res.status(200).json(filteredUsers);
   } catch (error) {
-    console.error("Error in getUsers ForSidebar:" + error.message);
+    console.error("Error in getUsersForSidebar: " + error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
 const getMessages = asyncHandler(async (req, res) => {
   try {
-    //user to chat with
     const { id: userToChatId } = req.params;
-
-    //our USERid
     const myId = req.user._id;
 
     const messages = await Message.find({
@@ -38,11 +32,9 @@ const getMessages = asyncHandler(async (req, res) => {
       ],
     });
 
-    //it fetches all the function where i am sender and next person is receiver and vice versa
-
     res.status(200).json(messages);
   } catch (error) {
-    console.error("Error in getMessages:" + error.message);
+    console.error("Error in getMessages: " + error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -55,7 +47,6 @@ const sendMessage = asyncHandler(async (req, res) => {
 
     let imageUrl;
 
-    // Check if file was uploaded (for form-data)
     if (req.file) {
       try {
         const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
@@ -66,9 +57,7 @@ const sendMessage = asyncHandler(async (req, res) => {
         console.error("Cloudinary upload failed:", error);
         return res.status(500).json({ error: "Image upload failed" });
       }
-    }
-    // Check if image URL was sent directly (for JSON)
-    else if (req.body.image) {
+    } else if (req.body.image) {
       imageUrl = req.body.image;
     }
 
@@ -81,11 +70,10 @@ const sendMessage = asyncHandler(async (req, res) => {
 
     await newMessage.save();
 
-    ///realtime socket implementation
-    const SocketReceiverID = getReceiverSocketId(receiverId);
+    const socketReceiverId = getReceiverSocketId(receiverId);
 
-    if (SocketReceiverID) {
-      io.to(SocketReceiverID).emit("newMessage", newMessage);
+    if (socketReceiverId) {
+      io.to(socketReceiverId).emit("newMessage", newMessage);
     }
 
     res.status(200).json(newMessage);
@@ -95,4 +83,4 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getUsersForSidebar, getMessages, sendMessage };
+export { getUsersForSidebar, getMessages, sendMessage };

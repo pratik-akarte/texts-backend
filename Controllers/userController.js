@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const User = require("../Models/UserModel.js");
-const generateToken = require("../config/generateToken.js");
-const cloudinary = require("../config/cloudinary.js");
+import asyncHandler from "express-async-handler";
+import User from "../Models/UserModel.js";
+import generateToken from "../config/generateToken.js";
+import cloudinary from "../config/cloudinary.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -50,10 +50,8 @@ const authUser = asyncHandler(async (req, res) => {
 
   const normalizedEmail = email.toLowerCase().trim();
 
-  // Find user by email
   const user = await User.findOne({ email: normalizedEmail });
 
-  // Check if user exists and password matches
   if (user && (await user.matchPassword(password))) {
     res.status(200).json({
       _id: user._id,
@@ -63,7 +61,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id, res),
     });
   } else {
-    res.status(401); // 401 Unauthorized is more appropriate for login failures
+    res.status(401);
     throw new Error("Invalid email or password");
   }
 });
@@ -73,7 +71,7 @@ const logOutUser = asyncHandler(async (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error("Error in logging out" + error.message);
+    console.error("Error in logging out: " + error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -82,7 +80,7 @@ const CheckUser = asyncHandler(async (req, res) => {
   try {
     res.status(200).json(req.user);
   } catch (error) {
-    console.error("Error in authenticating user" + error.message);
+    console.error("Error in authenticating user: " + error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -96,18 +94,16 @@ const updateProfile = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Profile pic is required" });
     }
 
-    // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(pic, {
       folder: "profile_pictures",
       resource_type: "auto",
     });
 
-    // Update user in database
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { pic: uploadResponse.secure_url },
       { new: true }
-    ).select("-password"); // Exclude password from response
+    ).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -116,10 +112,10 @@ const updateProfile = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = {
+export {
   registerUser,
   authUser,
   logOutUser,
   updateProfile,
-  CheckUser,
+  CheckUser
 };

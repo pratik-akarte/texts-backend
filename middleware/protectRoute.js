@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("../Models/UserModel.js");
+import jwt from "jsonwebtoken";
+import User from "../Models/UserModel.js";
 
 const protectRoute = async (req, res, next) => {
   try {
@@ -33,9 +33,9 @@ const protectRoute = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.error("Error in protectRoute middleware:" + err.message);
+    console.error("Error in protectRoute middleware: " + err.message);
     res.status(500).json({ message: "Internal Protected Route Error" });
   }
 };
 
-module.exports = protectRoute;
+export default protectRoute;

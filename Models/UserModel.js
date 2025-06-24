@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
-const UserModel = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: {
@@ -11,7 +11,6 @@ const UserModel = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-
     password: { type: String, required: true },
     pic: {
       type: String,
@@ -23,20 +22,17 @@ const UserModel = new mongoose.Schema(
 );
 
 // Method to compare entered password with hashed password in database
-UserModel.methods.matchPassword = async function (enteredPassword) {
+UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 // Pre-save hook to hash password before saving
-UserModel.pre("save", async function (next) {
-  // Only hash if password was modified
+UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   try {
     const salt = await bcrypt.genSalt(10);
-
     const hash = await bcrypt.hash(this.password, salt);
-
     this.password = hash;
     next();
   } catch (err) {
@@ -44,4 +40,6 @@ UserModel.pre("save", async function (next) {
   }
 });
 
-module.exports = mongoose.model("User", UserModel);
+const User = mongoose.model("User", UserSchema);
+
+export default User;

@@ -1,27 +1,28 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
 
-const connectDB = require("./config/db.js");
-const userRoutes = require("./routes/userRoutes.js");
-const messageRoutes = require("./routes/messageRoutes.js");
-const { errorHandler, notFound } = require("./Controllers/errorHandlers.js");
-const { app, server, io } = require("./config/socket.js");
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import { errorHandler, notFound } from "./Controllers/errorHandlers.js";
+import { app, server, io } from "./config/socket.js";
 
-// Load env variables
+// Load environment variables
 dotenv.config();
 
-// DB connection
+// Connect to database
 connectDB();
 
-// Setup middlewares
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
+
 app.use(
   cors({
     origin: "http://localhost:2703",
@@ -44,11 +45,11 @@ app.get("/hola", (req, res) => {
   res.send("API running");
 });
 
-// API routes
+// API endpoints
 app.use("/api/user", userRoutes);
 app.use("/api/message", messageRoutes);
 
-// Error Handlers
+// Error handling
 app.use(notFound);
 app.use(errorHandler);
 
@@ -60,4 +61,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// No need for export in CommonJS
+
+export default server;

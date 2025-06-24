@@ -1,22 +1,18 @@
-//chatname
-//groupchat
-//latest message
-//list of users
-//admin of groups
-
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import User from "./UserModel.js";
+import Message from "./MessageModel.js";
 
 const ChatModel = new mongoose.Schema(
   {
     chatName: { type: String, trim: true },
     isGroupChat: { type: Boolean, default: false },
-    users: { type: mongoose.Schema.Types.ObjectId, ref: User },
-    latestMsg: { type: mongoose.Schema.Types.ObjectId, ref: Message },
-    isAdmin: { type: mongoose.Schema.Types.ObjectId, ref: User },
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    latestMsg: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
+    isAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
 
-//Creates a Mongoose model named 'Chats' based on the ChatModel
+const Chat = mongoose.model("Chat", ChatModel);
 
-module.exports = ("Chat", ChatModel);
+export default Chat;
