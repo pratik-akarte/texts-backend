@@ -42,6 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/hola", (req, res) => {
+  res.cookie("test", "ken");
   res.send("API running");
 });
 

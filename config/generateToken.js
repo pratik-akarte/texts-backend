@@ -5,13 +5,15 @@ const generateToken = (userId, res) => {
     expiresIn: "7d",
   });
 
+  if (!token) console.log("jwt failed to generate token");
+  if (process.env.JWT_SECRET_KEY)
+    console.log("secret key:" + process.env.JWT_SECRET_KEY);
+
   res.cookie("jwt", token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,
-    sameSite: "none", // REQUIRED for cross-domain in production
-    secure: true, // REQUIRED with sameSite: none
-    domain: ".vercel.app", // Leading dot for subdomains
-    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: "None", // Required for cross-origin
+    secure: true, // Required for SameSite=None (HTTPS)
   });
 
   return token;
