@@ -25,7 +25,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "https://texts-dot.vercel.app/",
+    origin: "https://texts-dot.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
