@@ -10,7 +10,7 @@ const generateToken = (userId, res) => {
     httpOnly: true,
     sameSite: "none", // REQUIRED for cross-domain in production
     secure: true, // REQUIRED with sameSite: none
-    domain: "https://texts-dot.vercel.app", // Leading dot for subdomains
+    domain: ".vercel.app", // Leading dot for subdomains
     path: "/",
   });
 
