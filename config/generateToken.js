@@ -6,11 +6,14 @@ const generateToken = (userId, res) => {
   });
 
   res.cookie("jwt", token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // MS
-    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "strict", // CSRF attacks cross-site request forgery attacks
-    secure: process.env.NODE_ENV !== "developement",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    httpOnly: true,
+    sameSite: "none", // REQUIRED for cross-domain in production
+    secure: true, // REQUIRED with sameSite: none
+    domain: "https://texts-dot.vercel.app", // Leading dot for subdomains
+    path: "/",
   });
+
   return token;
 };
 
