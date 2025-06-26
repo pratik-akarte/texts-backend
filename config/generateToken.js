@@ -5,9 +5,8 @@ const generateToken = (userId, res) => {
     expiresIn: "7d",
   });
 
-  if (!token) console.log("jwt failed to generate token");
-  if (process.env.JWT_SECRET_KEY)
-    console.log("secret key:" + process.env.JWT_SECRET_KEY);
+  if (!token) console.log("Failed to generate JWT token");
+  
 
   res.cookie("jwt", token, {
     httpOnly: true,
